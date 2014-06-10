@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>Jscorer</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  <context-param>
+    <param-name>log4jConfigLocation</param-name>
+    <param-value>/WEB-INF/log4j.properties</param-value>
+  </context-param>
+  
+  <listener>
+    <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+  </listener>
+  
+  <!-- WEIBOPUSH Service -->
+  <listener>
+		<listener-class>soccer.weibo.PushThreadStart</listener-class>
+  </listener>
+ 
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  
+  <listener>
+    <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+  </listener>
+  
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>/WEB-INF/applicationContext*.xml</param-value>
+  </context-param>
+  
+  <context-param><!-- add for multi subcontext-->
+    <param-name>webAppRootKey</param-name>
+    <param-value>app.root</param-value>
+  </context-param>
+  
+  <servlet>
+    <servlet-name>spring</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>spring</servlet-name>
+    <url-pattern>*.*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>JscorerServlet</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <description>Jscorer</description>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>/WEB-INF/springmvc-servlet.xml</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>JscorerServlet</servlet-name>
+    <url-pattern>/add_newinfo</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>JscorerServlet</servlet-name>
+    <url-pattern>/query_newinfo</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>JscorerServlet</servlet-name>
+    <url-pattern>/delete_newinfo</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>JscorerServlet</servlet-name>
+    <url-pattern>/add_reviewinfo</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>JscorerServlet</servlet-name>
+    <url-pattern>/query_reviewinfo</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>JscorerServlet</servlet-name>
+    <url-pattern>/delete_reviewinfo</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>JscorerServlet</servlet-name>
+    <url-pattern>/updatepic</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>JscorerServlet</servlet-name>
+    <url-pattern>/getPic</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>JscorerServlet</servlet-name>
+    <url-pattern>/restartWeiboService</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>JscorerServlet</servlet-name>
+    <url-pattern>/web_getCurrentSystemWeiboStatus</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>JscorerServlet</servlet-name>
+    <url-pattern>/web_setWeiboCode</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>JscorerServlet</servlet-name>
+    <url-pattern>/query_weiboinfo</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>JscorerServlet</servlet-name>
+    <url-pattern>/delete_weiboinfo</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>JscorerServlet</servlet-name>
+    <url-pattern>/convertTime</url-pattern>
+  </servlet-mapping>
+</web-app>

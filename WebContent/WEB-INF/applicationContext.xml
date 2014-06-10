@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+	<bean id="serverAddress" class="com.mongodb.ServerAddress">
+		<constructor-arg type="String">
+			<value>127.0.0.1</value>
+		</constructor-arg>
+		<!-- 192.168.1.102 -->
+		<!-- 127.0.0.1 -->
+		<constructor-arg type="int">
+			<value>28018</value>
+			<!-- 30000 -->
+			<!-- 27017 -->
+		</constructor-arg>
+	</bean>
+
+	<!--bean id="options" class="soccer.access.dao.ZxMongoOptions">
+	</bean-->
+
+	<bean id="mongo" class="com.mongodb.Mongo">
+		<constructor-arg ref="serverAddress"></constructor-arg>
+		<!--constructor-arg ref="options"></constructor-arg-->
+	</bean>
+
+	<bean id="morphia" class="com.google.code.morphia.Morphia">
+	</bean>
+	
+	<bean class="soccer.weibo.MyApplicationContextUtil"></bean>
+	
+	
+	<bean id="weiboDao" class="soccer.access.dao.WeiboDao" scope="singleton">
+		<constructor-arg ref="mongo"></constructor-arg>
+		<constructor-arg ref="morphia"></constructor-arg>
+		<constructor-arg value="soccer"></constructor-arg>
+		<constructor-arg value=""></constructor-arg>
+		<constructor-arg value=""></constructor-arg>
+	</bean>
+	
+	
+	<bean id="generalInfoDao" class="soccer.access.dao.GeneralInfoDao" scope="singleton">
+		<constructor-arg ref="mongo"></constructor-arg>
+		<constructor-arg ref="morphia"></constructor-arg>
+		<constructor-arg value="soccer"></constructor-arg>
+		<constructor-arg value=""></constructor-arg>
+		<constructor-arg value=""></constructor-arg>
+	</bean>
+
+	<bean id="newsDao" class="soccer.access.dao.NewsDao" scope="singleton">
+		<constructor-arg ref="mongo"></constructor-arg>
+		<constructor-arg ref="morphia"></constructor-arg>
+		<constructor-arg value="soccer"></constructor-arg>
+		<constructor-arg value=""></constructor-arg>
+		<constructor-arg value=""></constructor-arg>
+	</bean>
+
+	<bean id="reviewDao" class="soccer.access.dao.ReviewDao" scope="singleton">
+		<constructor-arg ref="mongo"></constructor-arg>
+		<constructor-arg ref="morphia"></constructor-arg>
+		<constructor-arg value="soccer"></constructor-arg>
+		<constructor-arg value=""></constructor-arg>
+		<constructor-arg value=""></constructor-arg>
+	</bean>
+	
+	<bean id="fileDao" class="soccer.access.dao.FileDao" scope="singleton">
+		<constructor-arg ref="mongo"></constructor-arg>
+		<constructor-arg value="soccer"></constructor-arg>
+		<constructor-arg value=""></constructor-arg>
+		<constructor-arg value=""></constructor-arg>
+	</bean>
+
+	<bean id="newsInfoServer" class="soccer.access.server.NewsInfoServer"
+		scope="prototype">
+		<property name="newsDao">
+			<ref bean="newsDao" />
+		</property>
+	</bean>
+	
+	<bean id="reviewInfoServer" class="soccer.access.server.ReviewInfoServer"
+		scope="prototype">
+		<property name="reviewDao">
+			<ref bean="reviewDao" />
+		</property>
+	</bean>
+
+	<bean id="weiboInfoServer" class="soccer.access.server.WeiboInfoServer"
+		scope="prototype">
+		<property name="generalInfoDao">
+			<ref bean="generalInfoDao" />
+		</property>
+	</bean>
+</beans>

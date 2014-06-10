@@ -1,0 +1,8 @@
+20131105:
+1、web.xml添加  
+  <context-param><!-- add for multi subcontext-->
+    <param-name>webAppRootKey</param-name>
+    <param-value>app.root</param-value>
+  </context-param>
+2、applicationContext.xml暂时去除mongo调优代码
+  

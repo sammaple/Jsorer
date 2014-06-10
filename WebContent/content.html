@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <meta http-equiv="content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script language="javascript" type="text/javascript" src="src/jquery-1.8.1.min.js">
+    </script>
+    <title>Jscorer--基础知识</title>
+    <style type="text/css">
+        body {
+            pading: 0px;
+            font-size: 20px;
+            color: #110aff;
+            font-weight: bold;
+        }
+
+        /*body{font-size:12px;text-align:center}*/
+        #tbStu{width:260px;border:solid 1px #666;background-color:#eee;text-align:center}
+        #tbStu tr{line-height:23px}
+        #tbStu tr th{background-color:#ccc;color:#fff}
+        #tbStu .trOdd{background-color:#fff}
+
+        #tbPtu{width:460px;border:solid 1px #666;background-color:#eee;text-align:center}
+        #tbPtu tr{line-height:23px}
+        #tbPtu tr th{background-color:#ccc;color:#fff}
+        #tbPtu .trOdd{background-color:#fff}
+
+    </style>
+    <script type="text/javascript">
+        $(function(){
+            $("#tbStu tr:nth-child(even)").addClass("trOdd");
+            $("#tbPtu tr:nth-child(even)").addClass("trOdd");
+        })
+    </script>
+</head>
+<body>
+
+<table id="tbStu" cellpadding="0" cellspacing="0">
+    <tbody>
+    <tr>
+        <th>数值</th><th>水位</th>
+    </tr>
+    <tr>
+        <td>1.8以下</td><td>超低水</td>
+    </tr>
+    <!--奇数行-->
+    <tr>
+        <td>1.8-1.85</td><td>低水</td>
+    </tr>
+    <!--偶数行-->
+    <tr>
+        <td>1.89-1.85</td><td>中低水</td>
+    </tr>
+    <tr>
+        <td>1.90-1.99</td><td>中水</td>
+    </tr>
+    <tr>
+        <td>2.00-2.05</td><td>高水</td>
+    </tr>
+    <tr>
+        <td>2.06以上</td><td>超高水</td>
+    </tr>
+    <!--...-->
+    </tbody>
+</table>
+
+<table id="tbPtu" cellpadding="0" cellspacing="0">
+    <tbody>
+    <tr>
+        <th>盘口</th><th>输赢</th>
+    </tr>
+    <tr>
+        <td>平手</td><td>双方平开，双方获胜的几率一样,走盘</td>
+    </tr>
+    <!--奇数行-->
+    <tr>
+        <td>平手/半球</td><td>让球方打平买它的人输一半，赢一个全赢</td>
+    </tr>
+    <!--偶数行-->
+    <tr>
+        <td>半球</td><td>让球方打平或者输球买它的全输，赢一个全赢</td>
+    </tr>
+    <tr>
+        <td>半球/一球</td><td>让球方平或负全输，赢一球赢一半，赢两球全赢</td>
+    </tr>
+    <tr>
+        <td>一球</td><td>让球方输、平全输，赢一个球算平，赢两球全赢</td>
+    </tr>
+    <tr>
+        <td>一球/球半</td><td>让球方赢一个球买它的人输一半，赢两球全赢</td>
+    </tr>
+    <tr>
+        <td>球半</td><td>让球方输、平、赢一个全输，赢两个球全赢</td>
+    </tr>
+    <tr>
+        <td>球半/两球</td><td>让球方赢两个买它的赢一半，赢三个全赢</td>
+    </tr>
+    <tr>
+        <td>两球</td><td>让球方赢两个球算平，赢三个球全赢</td>
+    </tr>
+    <!--...-->
+    </tbody>
+</table>
+
+</body>
+</html>

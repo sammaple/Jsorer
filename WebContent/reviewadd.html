@@ -1,0 +1,508 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="content-Type" content="text/html; charset=UTF-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Jscorer--复盘案例添加</title>
+<script language="javascript" type="text/javascript" src="src/jquery-1.8.1.min.js">
+</script>
+
+<link rel="stylesheet" href="src/jquery_ui/themes/base/jquery.ui.all.css">
+<link href="sevenup_common.css" rel="stylesheet" type="text/css" />
+<script src="src/jquery_ui/ui/jquery.ui.core.js"></script>
+<script src="src/jquery_ui/ui/jquery.ui.widget.js"></script>
+<script src="src/jquery_ui/ui/jquery.ui.datepicker.js"></script>
+
+<style type="text/css">
+    body {
+        pading: 0px;
+    }
+    
+    #head {
+        font-size: 16px;
+        border: solid 1px #006600;
+        padding: 3px;
+        width: auto;
+        margin-bottom: 10px;
+        background: #006600;
+        color: #ff9900;
+        font-weight: bold;
+    }
+    
+    ul {
+        margin: 0px;
+        padding-top: 0px;
+        padding-left: 10px;
+    }
+
+    .lw {
+        float: left;
+        text-align: right;
+        font-weight: bold;
+        padding-top: 2px;
+        padding-bottom: 5px;
+        width: 180px;
+    }
+
+    .selectlw {
+        float: left;
+        padding-top: 2px;
+        padding-bottom: 5px;
+        width: 84px;
+    }
+
+    a {
+        text-decoration: none;
+        color: #555;
+    }
+
+    a:hover {
+        text-decoration: none;
+        color: #7f0019
+    }
+
+    .txtA {
+        float: left;
+        width: 350px;
+        height: 150px;
+    }
+
+    .txt {
+        float: left;
+        width: 350px;
+    }
+
+    .txtno {
+        float: left;
+        width: 350px;
+    }
+
+    ul, ol, li, dl, dt, dd {
+        list-style: none outside none;
+    }
+
+    .news li {
+        clear: both;
+        padding: 8px 0 5px 10px;
+    }
+
+    .btn {
+        font-weight: bold;
+        float: right;
+        margin: 0 220px 10px 10px; /*top right bottom left*/
+    }
+
+    .btn2 {
+        font-weight: bold;
+        float: right;
+        margin: 0 20px 10px 10px; /*top right bottom left*/
+    }
+
+    #newformdiv {
+        /*text-align: left;*/
+        float: center;
+        /*border: solid 1px #006600;*/
+        width: 800px;
+        /*height: 650px;*/
+        height: auto !important;
+        min-height: 530px;
+        /*padding: 200px 0 5px 10px;*/
+        margin: 0 0 5px 100px; /*top right bottom left*/
+    }
+
+    .divTip {
+        float: left;
+        font-weight: bold;
+        width: auto;
+        border: solid 1px #666;
+        padding: 8px;
+        font-size: 9pt;
+        background: #000000;
+        color: #00f000;
+        /*margin-top: 5px;*/
+        display: none;
+        margin: 100px 0 5px 20px;
+        /*top right bottom left*/
+    }
+</style>
+
+<script language="javascript">
+$(document).ready(function () {
+
+    var reviewneed = parent.isreviewedit;//ifarame 共享的全局变量
+    parent.isreviewedit = false;//清空编辑标志位
+    //alert(newsneed);
+
+
+    $("#datepicker").datepicker({/*时间*/
+        showOn:"button",
+        buttonImage:"images/calendar.gif",
+        buttonImageOnly:true,
+        changeMonth:true,
+        changeYear:true,
+        showWeek:true,
+        dateFormat:"yymmdd", /*数据格式*/
+        showOtherMonths:true,
+        selectOtherMonths:true
+    });
+
+    /* var strSel = "init";
+     $("#news1").change(function () { //设置下拉列表框change事件
+     strSel = this.val(); //获取下拉列表框所选中全部选项值
+     alert(strSel);
+     })*/
+    $("#btnSubmit_cancle").click(function () {
+        window.location.href = "review.html";
+    });
+
+    if (reviewneed == true) {
+        var count;
+        $("#title").val(parent.oReview_title);//标题
+        $("#content").val(parent.oReview_cont); //内容
+        $("#comment").val(parent.oReview_comm); //备注
+
+        count = $("#zhuchang option").length;// 主让/客让
+        for (var i = 0; i < count; i++) {
+            if ($("#zhuchang").get(0).options[i].text == parent.oReview_zhuchang) {
+                $("#zhuchang").get(0).options[i].selected = true;
+                break;
+            }
+        }
+        count = $("#chushi option").length;// 初始盘口
+        for (var i = 0; i < count; i++) {
+            if ($("#chushi").get(0).options[i].text == parent.oReview_chushi) {
+                $("#chushi").get(0).options[i].selected = true;
+                break;
+            }
+        }
+
+        count = $("#zuizhong option").length;// 终盘
+        for (var i = 0; i < count; i++) {
+            if ($("#zuizhong").get(0).options[i].text == parent.oReview_zuizhong) {
+                $("#zuizhong").get(0).options[i].selected = true;
+                break;
+            }
+        }
+        count = $("#zouxiang option").length;// 盘口走向
+        for (var i = 0; i < count; i++) {
+            if ($("#zouxiang").get(0).options[i].text == parent.oReview_zouxiang) {
+                $("#zouxiang").get(0).options[i].selected = true;
+                break;
+            }
+        }
+        count = $("#zongjie option").length;// 总结
+        for (var i = 0; i < count; i++) {
+            if ($("#zongjie").get(0).options[i].text == parent.oReview_zongjie) {
+                $("#zongjie").get(0).options[i].selected = true;
+                break;
+            }
+        }
+
+        $("#datepicker").val(parent.oReview_date);//比赛时间
+        $("#path").val(parent.oReview_path);//网页路径
+
+        count = $("#rshengfu option").length;// 让球方胜平负
+        for (var i = 0; i < count; i++) {
+            if ($("#rshengfu").get(0).options[i].text == parent.oReview_rshengfu) {
+                $("#rshengfu").get(0).options[i].selected = true;
+                break;
+            }
+        }
+
+        count = $("#pshengfu option").length;// 盘口赢走输
+        for (var i = 0; i < count; i++) {
+            if ($("#pshengfu").get(0).options[i].text == parent.oReview_pshengfu) {
+                $("#pshengfu").get(0).options[i].selected = true;
+                break;
+            }
+        }
+        count = $("#bshengfu option").length;// 半全场胜负
+        for (var i = 0; i < count; i++) {
+            if ($("#bshengfu").get(0).options[i].text == parent.oReview_bshengfu) {
+                $("#bshengfu").get(0).options[i].selected = true;
+                break;
+            }
+        }
+
+        count = $("#daxiao option").length;// 大小球以2.5为例
+        for (var i = 0; i < count; i++) {
+            if ($("#daxiao").get(0).options[i].text == parent.oReview_daxiao) {
+                $("#daxiao").get(0).options[i].selected = true;
+                break;
+            }
+        }
+
+        $("#bifeng").val(parent.oReview_bifen);//比分
+    }
+
+
+    $("#btnSubmit").click(function () {
+        parent.oReview_title = $("#title").val(); //标题
+
+        parent.oReview_zhuchang = $("#zhuchang option:selected").text();//主让/客让
+        parent.oReview_chushi = $("#chushi option:selected").text();//初始盘口
+        parent.oReview_zuizhong = $("#zuizhong option:selected").text();//终盘
+
+        parent.oReview_zouxiang = $("#zouxiang option:selected").text();//盘口走向
+        parent.oReview_zongjie = $("#zongjie option:selected").text();//总结
+
+
+        parent.oReview_cont = $("#content").val(); //内容
+        parent.oReview_comm = $("#comment").val(); //备注
+
+        parent.oReview_date = $("#datepicker").val();//时间
+        parent.oReview_path = $("#path").val(); //网页路径
+
+        parent.oReview_rshengfu = $("#rshengfu option:selected").text();// 让球方胜平负
+        parent.oReview_pshengfu = $("#pshengfu option:selected").text();//盘口赢走输
+        parent.oReview_bshengfu = $("#bshengfu option:selected").text();//半全场胜负
+        parent.oReview_daxiao = $("#daxiao option:selected").text();//大小球以2.5为例
+
+        parent.oReview_bifen = $("#bifeng").val();//比分
+
+
+        $("#divTip").css("display", "block").html("标题:" + parent.oReview_title
+                + "<br>" + "主让/客让:" + parent.oReview_zhuchang
+                + "<br>"
+                + "<br>" + "初始盘口:" + parent.oReview_chushi
+                + "<br>" + "最终盘口:" + parent.oReview_zuizhong
+                + "<br>" + "盘口走向:" + parent.oReview_zouxiang
+                + "<br>" + "个人总结:" + parent.oReview_zongjie
+                + "<br>"
+                + "<br>" + "内容:" + parent.oReview_cont
+                + "<br>" + "备注:" + parent.oReview_comm
+                + "<br>" + "比赛时间:" + parent.oReview_date
+                + "<br>" + "网页路径:" + parent.oReview_path
+
+                + "<br>" + "让球方胜平负:" + parent.oReview_rshengfu
+                + "<br>" + "盘口赢走输:" + parent.oReview_pshengfu
+                + "<br>" + "让球方半全场胜负:" + parent.oReview_bshengfu
+                + "<br>" + "大小球以2.5为例:" + parent.oReview_daxiao
+                + "<br>" + "让球方比分:" + parent.oReview_bifen//以让球方为准
+
+        ); //显示提示文本元素
+
+        if (reviewneed == true) {//复盘修改进入
+
+            $.ajax({ //请求登录处理页
+                url:"/Jscorer/add_reviewinfo", //登录处理页
+                dataType:"json",
+                //传送请求数据
+
+                data:{newsId:parent.reviewId, title:parent.oReview_title, content:parent.oReview_cont,
+                    comment:parent.oReview_comm, zhuchang:parent.oReview_zhuchang,
+                    chupan:parent.oReview_chushi, zhongpan:parent.oReview_zuizhong,
+                    trend:parent.oReview_zouxiang, selfcommet:parent.oReview_zongjie,
+                    date:parent.oReview_date, path:parent.oReview_path,
+                    rshengfu:parent.oReview_rshengfu, pshengfu:parent.oReview_pshengfu,
+                    bshengfu:parent.oReview_bshengfu, daxiao:parent.oReview_daxiao,
+                    bifen:parent.oReview_bifen
+                },
+                //newsId:newsId,
+                success:function (strValue) { //登录成功后返回的数据
+                    //根据返回值进行状态显示
+                    //alert(strValue);
+                    if (strValue.successful == "true") {
+                        alert("添加成功！");
+                    }
+                    else {
+                        alert("添加失败！");
+                    }
+
+                    window.location.href = "review.html";//content
+                },
+
+                error:function () {
+
+                    alert("请检查是否有参数错误！");
+                }
+            })
+        }
+        else {
+
+            $.ajax({ //请求登录处理页
+                        url:"/Jscorer/add_reviewinfo", //登录处理页
+                        dataType:"json",
+                        //传送请求数据
+
+                        data:{title:parent.oReview_title, content:parent.oReview_cont,
+                            comment:parent.oReview_comm, zhuchang:parent.oReview_zhuchang,
+                            chupan:parent.oReview_chushi, zhongpan:parent.oReview_zuizhong,
+                            trend:parent.oReview_zouxiang, selfcommet:parent.oReview_zongjie,
+                            date:parent.oReview_date, path:parent.oReview_path,
+                            rshengfu:parent.oReview_rshengfu, pshengfu:parent.oReview_pshengfu,
+                            bshengfu:parent.oReview_bshengfu, daxiao:parent.oReview_daxiao,
+                            bifen:parent.oReview_bifen
+                        },
+                        //newsId:newsId,
+                        success:function (strValue) { //登录成功后返回的数据
+                            //根据返回值进行状态显示
+                            //alert(strValue);
+                            if (strValue.successful == "true") {
+                                alert("添加成功！");
+                            }
+                            else {
+                                alert("添加失败！");
+                            }
+
+                            window.location.href = "review.html";//content
+                        },
+
+                        error:function () {
+
+                            alert("请检查是否有参数错误！");
+                        }
+                    }
+            )
+        }
+    })
+})
+</script>
+</head>
+<body>
+<!--div id="head">
+    Sam的宅基地，欢迎光临！
+</div-->
+
+<div id="news">
+    <div id="newformdiv">
+        <ul class="news">
+            <li>
+                <label class="lw"> 标题: </label>
+                <input id="title" type="text" value="" class="txt"/>
+            </li>
+            <li>
+                <label class="lw"> 主让/客让: </label>
+                <select class="selectlw" id="zhuchang">
+                    <option value="主让">主让</option>
+                    <option value="客让">客让</option>
+                    <option value="其他">其他</option>
+                </select>
+            </li>
+            <li>
+                <label class="lw"> 初始盘口: </label>
+                <select class="selectlw" id="chushi">
+                    <option value="平手">平手</option>
+                    <option value="平半">平半</option>
+                    <option value="半球">半球</option>
+                    <option value="半一">半一</option>
+                    <option value="一球">一球</option>
+                	<option value="一球/球半">一球/球半</option>
+                    <option value="球半">球半</option>
+                    <option value="球半/两球">球半/两球</option>
+                    <option value="两球">两球</option>
+                    <option value="两球以上">两球以上</option>
+                    <option value="其他">其他</option>
+                </select>
+                <label class="lw"> 最终盘口: </label>
+                <select class="selectlw" id="zuizhong" style="margin-left: 20px">
+                    <option value="受让半一">受让半一</option>
+                    <option value="受让半球">受让半球</option>
+                    <option value="受让平半">受让平半</option>
+                    <option value="平手">平手</option>
+                    <option value="平半">平半</option>
+                    <option value="半球">半球</option>
+                    <option value="半一">半一</option>
+                    <option value="一球">一球</option>
+                	<option value="一球/球半">一球/球半</option>
+                    <option value="球半">球半</option>
+                    <option value="球半/两球">球半/两球</option>
+                    <option value="两球">两球</option>
+                    <option value="两球以上">两球以上</option>
+                    <option value="其他">其他</option>
+                </select>
+            <li>
+                <label class="lw"> 盘口走向: </label>
+                <select class="selectlw" id="zouxiang">
+                    <option value="升盘">升盘</option>
+                    <option value="降盘">降盘</option>
+                    <option value="U型盘口振荡">U型盘口振荡</option>
+                    <option value="反U型盘口振荡">反U型盘口振荡</option>
+                    <option value="盘不动U型水位振荡">盘不动U型水位振荡</option>
+                    <option value="盘不动反U型水位振荡">盘不动反U型水位振荡</option>
+                    <option value="盘不动水位线性上调">盘不动水位线性上调</option>
+                    <option value="盘不动水位线性下调">盘不动水位线性下调</option>
+                    <option value="盘不动水位不动">盘不动水位不动</option>
+                    <option value="其他">其他</option>
+                </select>
+                <label class="lw"> 个人总结: </label>
+                <select class="selectlw" id="zongjie" style="margin-left: 20px">
+                    <option value="诱盘">诱盘</option>
+                    <option value="阻盘">阻盘</option>
+                    <option value="笋盘">笋盘</option>
+                    <option value="正常盘">正常盘</option>
+                    <option value="交叉盘">交叉盘</option>
+                    <option value="其他">其他</option>
+                </select>
+            </li>
+
+            <li>
+                <label class="lw"> 让球方胜平负: </label>
+                <select class="selectlw" id="rshengfu">
+                    <option value="胜">胜</option>
+                    <option value="平">平</option>
+                    <option value="负">负</option>
+                </select>
+                <label class="lw"> 让盘方赢走输: </label>
+                <select class="selectlw" id="pshengfu" style="margin-left: 20px">
+                    <option value="赢">赢</option>
+                    <option value="走">走</option>
+                    <option value="输">输</option>
+                </select>
+            </li>
+
+            <li>
+                <label class="lw"> 让球方半场胜平负: </label>
+                <select class="selectlw" id="bshengfu">
+                    <option value="胜胜">胜胜</option>
+                    <option value="平胜">平胜</option>
+                    <option value="负胜">负胜</option>
+                    <option value="胜平">胜平</option>
+                    <option value="平平">平平</option>
+                    <option value="负平">负平</option>
+                    <option value="胜负">胜负</option>
+                    <option value="平负">平负</option>
+                    <option value="负负">负负</option>
+                </select>
+                <label class="lw"> 大小球: </label>
+                <select class="selectlw" id="daxiao" style="margin-left: 20px">
+                    <option value="大">大</option>
+                    <option value="小">小</option>
+                </select>
+            </li>
+
+            <li>
+                <label class="lw"> 让球方比分(半全场): </label>
+                <input type="text" id="bifeng">
+            <li>
+
+            <li>
+                <label class="lw"> 比赛时间: </label>
+                <input type="text" id="datepicker">
+            <li>
+                <label class="lw"> 内容: </label>
+                <textarea id="content" class="txtA"></textarea>
+            </li>
+            <li>
+                <label class="lw"> 备注: </label>
+                <input id="comment" type="text" value="" class="txt"/>
+            </li>
+            <li>
+                <label class="lw"> 网页路径: </label>
+                <input id="path" type="text" value="" class="txt"/>
+            </li>
+
+            <li>
+                <input id="btnSubmit" type="submit" value="提交" class="btn11" style="margin: 0 0px 0px 200px; border:0px;" onmouseover="this.style.backgroundPosition='left -40px'" onmouseout="this.style.backgroundPosition='left top'"/>
+                <input id="btnSubmit_cancle" type="submit" value="取消" class="btn11" style="border:0px;" onmouseover="this.style.backgroundPosition='left -40px'" onmouseout="this.style.backgroundPosition='left top'"/>
+            </li>
+        </ul>
+    </div>
+
+
+    <div id="divTip" class="divTip"></div>
+
+
+</div>
+</body>
+</html>

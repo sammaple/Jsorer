@@ -1,0 +1,548 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="content-Type" content="text/html; charset=UTF-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Jscorer--复盘</title>
+
+
+<script language="javascript" type="text/javascript" src="src/jquery-1.8.1.min.js">
+</script>
+<script language="javascript" type="text/javascript" src="src/jquery-impromptu.4.0.js">
+</script>
+<script language="javascript" type="text/javascript" src="src/jquery.pagination.js">
+</script>
+<link rel="stylesheet" href="src/pagination.css"/>
+<link rel="stylesheet" type="text/css" href="src/examples.css"/>
+
+<style type="text/css">
+    body {
+        pading: 0px;
+    }
+
+    ul {
+        margin: 0px;
+        padding-top: 0px;
+        padding-left: 0px;
+    }
+
+    a {
+        text-decoration: none;
+        color: #555;
+    }
+
+    a:hover {
+        text-decoration: none;
+        color: #7f0019
+    }
+
+    ul, ol, li, dl, dt, dd {
+        list-style: none outside none;
+    }
+
+    .news li {
+        clear: both;
+        padding: 8px 0 5px 10px;
+    }
+
+    div li {
+        /*font-weight: bold;*/
+        border: solid 1px #666;
+        padding: 2px;
+        font-size: 10pt;
+        background: #f5fcf6;
+        color: #3770f0;
+        /*margin-top: 5px;*/
+        display: block;
+        margin: 10px 0 5px 10px;
+        /*top right bottom left*/
+    }
+
+    .del {
+        float: right;
+        margin: 10px 0 5px 20px;
+    }
+
+    .edit {
+        float: right;
+        margin: 10px 0 5px 20px;
+    }
+
+    .newsid {
+        display: none;
+    }
+
+    .tips {
+        width: 300px;
+    }
+
+    .settings {
+        display: none;
+    }
+
+    .cont {
+        color: red;
+    }
+    	.btn {
+	    background: url("images/i-1.0.0.png") no-repeat scroll 0 0 transparent;/*-202px*/
+	    display: inline-block;
+	    height: 34px;
+	    vertical-align: top;
+	    width: 97px;
+	    z-index: 0;
+	    border:0px;
+	}
+</style>
+
+<script language="javascript">
+
+function initreviewinfo() {
+
+    parent.oReview_title = ""; //标题
+    parent.oReview_zhuchang = "";//主让/客让
+    parent.oReview_chushi = "";//初始盘口
+    parent.oReview_zuizhong = "";//终盘
+    parent.oReview_zouxiang = "";//盘口走向
+    parent.oReview_zongjie = "";//总结
+    parent.oReview_cont = ""; //内容
+    parent.oReview_comm = ""; //备注
+    parent.oReview_date = "";//时间
+    parent.oReview_path = ""; //网页路径
+    parent.oReview_rshengfu = "";// 让球方胜平负
+    parent.oReview_pshengfu = "";// 盘口赢走输
+    parent.oReview_bifen = "";// 比分（含半场）
+    parent.oReview_bshengfu = "";// 半全场胜负
+    parent.oReview_daxiao = "";// 大小球以2.5为例
+    //alert("init");
+}
+
+function initqueryctrl() {
+    $("#queryteam").val("");
+    $("#zhuchang").get(0).selectedIndex = 0;//index为索引值
+    $("#chushi").get(0).selectedIndex = 0;//index为索引值
+    $("#zuizhong").get(0).selectedIndex = 0;//index为索引值
+    $("#zouxiang").get(0).selectedIndex = 0;//index为索引值
+
+
+    parent.oReview_Querytitle = "";//需要查询的复盘参数
+    parent.oReview_Queryzhuchang = "";//需要查询的主让/客让
+    parent.oReview_Querychushi = "";//需要查询的初始盘口
+    parent.oReview_Queryzuizhong = "";//需要查询的终盘
+    parent.oReview_Queryzouxiang = "";//需要查询的盘口走向
+
+}
+
+function delitem(newsid) {
+    $.ajax({ //请求登录处理页
+        url:"/Jscorer/delete_reviewinfo", //登录处理页
+        dataType:"json",
+        //传送请求数据
+        data:{ newsid:parent.oReview_delid},
+        success:function (strValue) { //登录成功后返回的数据
+
+            if (strValue.successful == "true") {
+
+                alert("删除成功！");
+                
+             	 //window.parent.location.reload();//网页刷新的浏览器兼容
+				var isIE=navigator.userAgent.toUpperCase().indexOf("MSIE") >=0 ?true:false; 
+				var isFirefox=navigator.userAgent.toUpperCase().indexOf("FIREFOX") >=0 ?true:false; 
+				//alert(navigator.userAgent.toUpperCase());
+				//alert(navigator.userAgent.toUpperCase().indexOf("MSIE"));
+				if (isIE){//浏览器兼容 document.all
+					//alert("IE");
+			        //window.parent.location.reload();
+			        window.location.reload();
+				}else if(isFirefox){
+					//alert("firefox");
+			        window.parent.viewframe.location="review.html";
+				}else{
+					//alert("chrome and else");
+			        //window.parent.location.reload();
+			        window.location.reload();
+				}
+            }
+            else {
+                alert("删除失败！");
+            }
+
+            //window.location.href = "newsview.html";
+        }
+    })
+
+}
+
+/*type 0表示全查询,1表示teamname参数查询*/
+function insertpage(json, type) {
+    $.each(json, function (i, n) {
+//                        alert(json[i].league+' '+json[i].value)
+//                        alert(n.league + '  ' + n.value);
+        if (i != 0) {
+            var $strid = n.newsid;
+
+            $("#review").append("<li>" + "标题:" + "<a class=\"title\">" + n.title + "</a>"
+                    + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + "比赛时间:" + "<a class=\"datej\">" + n.date + "</a>"
+                    + "&nbsp&nbsp" + "<a id=\""+$strid +"_del" +"\" class=\"del\" href=\"#\">删除</a>" + "&nbsp&nbsp"
+                    + "&nbsp&nbsp" + "<a id=\""+$strid +"\" class=\"edit\" href=\"#\">编辑</a>" + "&nbsp&nbsp"
+                    + "<br>" + "主让/客让:" + "<a class=\"zhuchang\">" + n.zhuchang + "</a>"
+                    + "&nbsp&nbsp&nbsp&nbsp&nbsp" + "初始盘口:" + "<a class=\"chushi\">" + n.chupan + "</a>"
+                    + "&nbsp&nbsp&nbsp&nbsp&nbsp" + "最终盘口:" + "<a class=\"zuizhong\">" + n.zhongpan + "</a>"
+                    + "<br>" + "盘口走向:" + "<a class=\"zouxiang\">" + n.trend + "</a>"
+                    + "&nbsp&nbsp&nbsp&nbsp&nbsp" + "个人总结:" + "<a class=\"zongjie\">" + n.selfcommet + "</a>"
+                    + "<br>" + "内容:" + "<a class=\"cont\">" + n.content + "</a>"
+                    + "<br>" + "备注:" + "<a class=\"comm\">" + n.comment + "</a>"
+                    + "<br>" + "网页路径:" + "<a class=\"path\" href=\"review\/" + n.path + "\" target=\"_blank\">" + n.path + "</a>"
+
+                    + "<br>" + "让球方胜平负:" + "<a class=\"rshengfu\">" + n.rshengfu + "</a>"
+                    + "&nbsp&nbsp&nbsp&nbsp&nbsp" + "让盘赢走输:" + "<a class=\"pshengfu\">" + n.pshengfu + "</a>"
+                    + "&nbsp&nbsp&nbsp&nbsp&nbsp" + "让球方比分（含半场）:" + "<a class=\"bifen\">" + n.bifen + "</a>"
+                    + "&nbsp&nbsp&nbsp&nbsp&nbsp" + "半全场胜负:" + "<a class=\"bshengfu\">" + n.bshengfu + "</a>"
+                    + "<br>" + "大小球以2.5为例:" + "<a class=\"daxiao\">" + n.daxiao + "</a>"
+
+                    + "<a id=\"idid\" class=\"newsid\">" + $strid + "</a>"
+                    + "</li>"
+            ); //显示提示文本元素 给网页路径自动加上一个reiew前缀
+        } else {/*传递有多少个item以后就初始化分页条*/
+
+            if (parent.oReview_Sum != n.sum) {
+                parent.oReview_Sum = n.sum;//该查询有多少条信息
+                var optInit = getOptionsFromForm(type);
+                $("#Pagination").pagination(n.sum, optInit);
+            }
+            //===============这里其实还缺少一个能够定位到某个页面的功能
+            //alert(n.sum);
+        }
+        
+        function deleteinfo(){
+
+            //if (this.text == "删除") {
+                parent.oReview_delid = $($(this).parent().get(0)).find("a.newsid").text();
+                //alert(delid);
+                //parent.oHtmldiv = $(this).parent().get(0);
+                $.prompt('是否删除该条信息!', {
+                    buttons:[
+                        {title:'确认删除', value:true},
+                        {title:'撤销删除', value:false}
+                    ],
+                    submit:function (e, v, m, f) {
+                        //alert(v);
+                        if (v == true) {
+
+                            //$(parent.oHtmldiv).remove();//bug 如果删除整个章节文档的话，会导致对话框没有堆栈消除；
+                            //$(parent.oHtmldiv).hide();
+                            delitem(parent.oReview_delid);
+                            
+        					
+                        }
+                    }
+                });
+            //} else{
+            //    alert("错误的操作");
+            //}
+        }
+
+        function modify(){
+                parent.oReview_editid = $($(this).parent().get(0)).find("a.newsid").text();
+                //alert(editid);
+                parent.isreviewedit = true;//标注需要编辑
+                initreviewinfo();
+
+                parent.oReview_title = $($(this).parent().get(0)).find("a.title").text(); //标题
+                parent.oReview_zhuchang = $($(this).parent().get(0)).find("a.zhuchang").text();//主让/客让
+                parent.oReview_chushi = $($(this).parent().get(0)).find("a.chushi").text();//初始盘口
+                parent.oReview_zuizhong = $($(this).parent().get(0)).find("a.zuizhong").text();//终盘
+                parent.oReview_zouxiang = $($(this).parent().get(0)).find("a.zouxiang").text();//盘口走向
+                parent.oReview_zongjie = $($(this).parent().get(0)).find("a.zongjie").text();//总结
+                parent.oReview_cont = $($(this).parent().get(0)).find("a.cont").text(); //内容
+                parent.oReview_comm = $($(this).parent().get(0)).find("a.comm").text(); //备注
+                parent.oReview_date = $($(this).parent().get(0)).find("a.datej").text();//时间
+                parent.oReview_path = $($(this).parent().get(0)).find("a.path").text(); //网页路径
+
+                parent.reviewId = $($(this).parent().get(0)).find("a.newsid").text();
+
+
+                parent.oReview_rshengfu = $($(this).parent().get(0)).find("a.rshengfu").text();// 让球方胜平负
+                parent.oReview_pshengfu = $($(this).parent().get(0)).find("a.pshengfu").text();// 盘口赢走输
+                parent.oReview_bifen = $($(this).parent().get(0)).find("a.bifen").text();// 比分（含半场）
+                parent.oReview_bshengfu = $($(this).parent().get(0)).find("a.bshengfu").text();// 半全场胜负
+                parent.oReview_daxiao = $($(this).parent().get(0)).find("a.daxiao").text();// 大小球以2.5为例
+
+
+                window.location.href = "reviewadd.html";//content
+        }
+        
+        $("div li a#"+$strid).click(modify);
+        var clickDelId = "#"+$strid+"_del";
+        $(clickDelId).click(deleteinfo);
+
+    });
+}
+
+function pageselect(page_index) {
+    $.ajax({ //请求登录处理页
+        url:"/Jscorer/query_reviewinfo", //登录处理页
+        dataType:"json",
+        //传送请求数据
+        data:{ type:"offset", page:page_index},
+        success:function (strValue) { //登录成功后返回的数据
+            //根据返回值进行状态显示
+            var json = eval(strValue);
+            //alert();
+            $("#review").empty();//删除子节点
+            insertpage(json, 0);
+
+        }
+    })
+}
+
+function pageselect_param(page_index) {
+    $.ajax({ //请求登录处理页
+        url:"/Jscorer/query_reviewinfo", //登录处理页
+        dataType:"json",
+        //传送请求数据
+
+        data:{ type:"param", page:page_index, title:parent.oReview_Querytitle,
+            zhuchang:parent.oReview_Queryzhuchang,
+            chupan:parent.oReview_Querychushi,
+            zhongpan:parent.oReview_Queryzuizhong,
+            trend:parent.oReview_Queryzouxiang
+        },
+
+        success:function (strValue) { //登录成功后返回的数据
+            //根据返回值进行状态显示
+            var json = eval(strValue);
+            //alert();
+            $("#review").empty();//删除子节点
+            insertpage(json, 1);
+
+        }
+    })
+}
+
+/**
+ * Callback function that displays the content.
+ *
+ * Gets called every time the user clicks on a pagination link.
+ *
+ * @param {int}page_index New Page index
+ * @param {jQuery} jq the container with the pagination links as a jQuery object
+ */
+function pageselectCallback(page_index, jq) {
+    // Get number of elements per pagionation page from form
+    var items_per_page = $('#items_per_page').val();
+    var max_elem = Math.min((page_index + 1) * items_per_page, parent.oNewsSum);
+    var newcontent = '';
+
+    //alert(page_index);
+    pageselect(page_index);
+    // Prevent click eventpropagation
+    return false;
+}
+
+function pageselectCallback_Param(page_index, jq) {
+    // Get number of elements per pagionation page from form
+    var items_per_page = $('#items_per_page').val();
+    var max_elem = Math.min((page_index + 1) * items_per_page, parent.oNewsSum);
+    var newcontent = '';
+
+    //alert(page_index);
+    pageselect_param(page_index);
+    // Prevent click eventpropagation
+    return false;
+}
+
+// The form contains fields for many pagiantion optiosn so you can
+// quickly see the resuluts of the different options.
+// This function creates an option object for the pagination function.
+// This will be be unnecessary in your application where you just set
+// the options once.
+function getOptionsFromForm(type) {
+    var opt;
+    if (type == 0) {
+
+        opt = {callback:pageselectCallback};
+    } else {
+
+        opt = {callback:pageselectCallback_Param};
+    }
+    // Collect options from the text fields - the fields are named like their option counterparts
+    $("input:text").each(function () {
+        opt[this.name] = this.className.match(/numeric/) ? parseInt(this.value) : this.value;
+    });
+    // Avoid html injections in this demo
+    var htmlspecialchars = { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;"}
+    $.each(htmlspecialchars, function (k, v) {
+        opt.prev_text = opt.prev_text.replace(k, v);
+        opt.next_text = opt.next_text.replace(k, v);
+    })
+    return opt;
+}
+
+$(document).ready(function () {
+    //alert("您好,欢迎来到Sam世界");
+
+    $("#querybtn").click(function () {
+        parent.oReview_Querytitle = $("#queryteam").val(); //查询球队
+        parent.oReview_Queryzhuchang = $("#zhuchang option:selected").text();//需要查询的主让/客让
+        parent.oReview_Querychushi = $("#chushi option:selected").text();//需要查询的初始盘口
+        parent.oReview_Queryzuizhong = $("#zuizhong option:selected").text();//需要查询的终盘
+        parent.oReview_Queryzouxiang = $("#zouxiang option:selected").text();//需要查询的盘口走向
+
+        pageselect_param(0);
+    })
+
+    $("#clrbtn").click(function () {
+        initqueryctrl();
+        pageselect(0);//以没有任何查询的第一页为准
+    })
+
+    $.ajax({ //请求登录处理页
+        url:"/Jscorer/query_reviewinfo", //登录处理页
+        dataType:"json",
+        //传送请求数据
+        data:{ type:"all"},
+        success:function (strValue) { //登录成功后返回的数据
+            //根据返回值进行状态显示
+            var json = eval(strValue);
+            //alert();
+
+            $.each(json, function (i, n) {
+//                        alert(json[i].league+' '+json[i].value)
+//                        alert(n.league + '  ' + n.value);
+                if (i != 0) {
+
+                } else {/*传递有多少个item以后就初始化分页条*/
+
+                    parent.oReview_Sum = n.sum;//该查询有多少条信息
+                    var optInit = getOptionsFromForm(0);
+                    $("#Pagination").pagination(n.sum, optInit);
+
+                    //alert(n.sum);
+                }
+
+            });
+
+            // Event Handler for for button
+            $("#setoptions").click(function () {
+                var opt = getOptionsFromForm();
+                // Re-create pagination content with new parameters
+                $("#Pagination").pagination(members.length, opt);
+            });
+            //window.location.href = "content.html";
+        }
+    })
+})
+
+</script>
+</head>
+<body>
+<!--div id="head">
+    Sam的宅基地，欢迎光临！
+</div-->
+
+<div id="query" class="query">
+    <ul class="news">
+        <li>
+            <label class="lw"> 标题(球队): </label>
+            <input id="queryteam" type="text" value="" class="txt"/>
+            &nbsp&nbsp&nbsp&nbsp&nbsp
+            <label class="lw"> 主让/客让: </label>
+            <select class="selectlw" id="zhuchang">
+                <option value="任意">任意</option>
+                <option value="主让">主让</option>
+                <option value="客让">客让</option>
+            </select>
+
+
+            <br>
+            <br>
+            <label class="lw"> 初始盘口: </label>
+            <select class="selectlw" id="chushi">
+                <option value="任意">任意</option>
+                <option value="平手">平手</option>
+                <option value="平半">平半</option>
+                <option value="半球">半球</option>
+                <option value="半一">半一</option>
+                <option value="一球">一球</option>
+                <option value="一球/球半">一球/球半</option>
+                <option value="球半">球半</option>
+                <option value="球半/两球">球半/两球</option>
+                <option value="两球">两球</option>
+                <option value="两球以上">两球以上</option>
+            </select>
+
+            &nbsp&nbsp&nbsp&nbsp&nbsp
+            <label class="lw"> 最终盘口: </label>
+            <select class="selectlw" id="zuizhong" style="margin-left: 20px">
+                <option value="任意">任意</option>
+                <option value="受让半一">受让半一</option>
+                <option value="受让半球">受让半球</option>
+                <option value="受让平半">受让平半</option>
+                <option value="平手">平手</option>
+                <option value="平半">平半</option>
+                <option value="半球">半球</option>
+                <option value="半一">半一</option>
+                <option value="一球">一球</option>
+                <option value="一球/球半">一球/球半</option>
+                <option value="球半">球半</option>
+                <option value="球半/两球">球半/两球</option>
+                <option value="两球">两球</option>
+                <option value="两球以上">两球以上</option>
+            </select>
+
+            &nbsp&nbsp&nbsp&nbsp&nbsp
+            <label class="lw"> 盘口走向: </label>
+            <select class="selectlw" id="zouxiang">
+                <option value="任意">任意</option>
+                <option value="升盘">升盘</option>
+                <option value="降盘">降盘</option>
+                <option value="U型盘口振荡">U型盘口振荡</option>
+                <option value="反U型盘口振荡">反U型盘口振荡</option>
+                <option value="盘不动U型水位振荡">盘不动U型水位振荡</option>
+                <option value="盘不动反U型水位振荡">盘不动反U型水位振荡</option>
+                <option value="盘不动水位线性上调">盘不动水位线性上调</option>
+                <option value="盘不动水位线性下调">盘不动水位线性下调</option>
+                <option value="盘不动水位不动">盘不动水位不动</option>
+            </select>
+
+            <br>
+            <br>
+            <input id="clrbtn" type="submit" value="清空查询" class="btn"/>
+            <input id="querybtn" type="submit" value="查询" class="btn"/>
+        </li>
+    </ul>
+</div>
+
+<div id="Pagination" class="pagination" style="height:30px;margin:10px 0 5px 10px">
+</div>
+
+<div id="review">
+</div>
+
+
+<div id="form_settings" class="settings">
+    <form name="paginationoptions">
+        <p><label for="items_per_page">Number of items per page</label><input type="text" value="6"
+                                                                              name="items_per_page" id="items_per_page"
+                                                                              class="numeric"/></p>
+
+        <p><label for="num_display_entries">Number of pagination links shown</label><input type="text" value="10"
+                                                                                           name="num_display_entries"
+                                                                                           id="num_display_entries"
+                                                                                           class="numeric"/></p>
+
+        <p><label for="num">Number of start and end points</label><input type="text" value="2" name="num_edge_entries"
+                                                                         id="num_edge_entries" class="numeric"/></p>
+
+        <p><label for="prev_text">"Previous" label</label><input type="text" value="Prev" name="prev_text"
+                                                                 id="prev_text"/></p>
+
+        <p><label for="next_text">"Next" label</label><input type="text" value="Next" name="next_text" id="next_text"/>
+        </p>
+        <input type="button" id="setoptions" value="Set options"/>
+    </form>
+</div>
+
+
+</body>
+</html>

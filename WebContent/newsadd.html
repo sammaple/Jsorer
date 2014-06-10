@@ -1,0 +1,721 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="content-Type" content="text/html; charset=UTF-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Jscorer--消息添加</title>
+<script language="javascript" type="text/javascript" src="src/jquery-1.8.1.min.js">
+</script>
+
+<link rel="stylesheet" href="src/jquery_ui/themes/base/jquery.ui.all.css">
+<link href="sevenup_common.css" rel="stylesheet" type="text/css" />
+
+<script src="src/jquery_ui/ui/jquery.ui.core.js"></script>
+<script src="src/jquery_ui/ui/jquery.ui.widget.js"></script>
+<script src="src/jquery_ui/ui/jquery.ui.datepicker.js"></script>
+
+<script language="javascript" type="text/javascript" src="src/ajaxfileupload.js">
+</script>
+
+<!--link rel="stylesheet" href="src/ajaxfileupload.css"/-->
+
+<style type="text/css">
+    body {
+        pading: 0px;
+    }
+
+    #head {
+        font-size: 16px;
+        border: solid 1px #006600;
+        padding: 3px;
+        width: auto;
+        margin-bottom: 10px;
+        background: #006600;
+        color: #ff9900;
+        font-weight: bold;
+    }
+
+    ul {
+        margin: 0px;
+        padding-top: 0px;
+        padding-left: 10px;
+    }
+
+    .lw {
+        float: left;
+        text-align: right;
+        font-weight: bold;
+        padding-top: 2px;
+        padding-bottom: 5px;
+        width: 180px;
+    }
+
+    .selectlw {
+        float: left;
+        padding-top: 2px;
+        padding-bottom: 5px;
+        width: 84px;
+    }
+
+    a {
+        text-decoration: none;
+        color: #555;
+    }
+
+    a:hover {
+        text-decoration: none;
+        color: #7f0019
+    }
+
+    .txtA {
+        float: left;
+        width: 350px;
+        height: 150px;
+    }
+
+    .txt {
+        float: left;
+        width: 350px;
+    }
+
+    .txtno {
+        float: left;
+        width: 350px;
+    }
+
+    ul, ol, li, dl, dt, dd {
+        list-style: none outside none;
+    }
+
+    .news li {
+        clear: both;
+        padding: 8px 0 5px 10px;
+    }
+
+    .lidisable {
+        display: none;
+    }
+
+    .lidisable_review {
+        display: none;
+    }
+
+    .btn {
+        font-weight: bold;
+        float: right;
+        margin: 0 20px 10px 10px; /*top right bottom left*/
+    }
+
+    #newformdiv {
+        /*text-align: left;*/
+        float: center;
+        /*border: solid 1px #006600;*/
+        width: 800px;
+        /*height: 650px;*/
+        height: auto !important;
+        min-height: 530px;
+        /*padding: 200px 0 5px 10px;*/
+        margin: 0 0 5px 100px; /*top right bottom left*/
+    }
+
+    .divTip {
+        float: left;
+        font-weight: bold;
+        width: auto;
+        border: solid 1px #666;
+        padding: 8px;
+        font-size: 9pt;
+        background: #000000;
+        color: #00f000;
+        /*margin-top: 5px;*/
+        display: none;
+        margin: 100px 0 5px 20px;
+        /*top right bottom left*/
+    }
+</style>
+
+<script language="javascript">
+$(document).ready(function () {
+    //alert("您好,欢迎来到Sam世界");
+    var newsneed = parent.isnewsedit;//ifarame 共享的全局变量
+    parent.isnewsedit = false;//清空编辑标志位
+    //alert(newsneed);
+    
+    var weiboedit = parent.isweiboedit;
+    parent.isweiboedit = false;
+
+
+    $("#datepicker").datepicker({/*时间*/
+        showOn:"button",
+        buttonImage:"images/calendar.gif",
+        buttonImageOnly:true,
+        changeMonth:true,
+        changeYear:true,
+        showWeek:true,
+        dateFormat:"yymmdd", /*数据格式*/
+        showOtherMonths:true,
+        selectOtherMonths:true
+    });
+
+    function objInit(obj) {//下拉列表框初始化
+        return $(obj).html("");
+    }
+
+    var arrData = { //定义一个数组保存相关数据
+        //中超:"广州恒大,江苏舜天,广州富力,贵州人和,北京国安,天津泰达,大连阿尔滨,长春亚泰,上海申花,大连实德,杭州绿城,山东鲁能,辽宁宏运,上海申鑫,青岛中能,河南建业,其他",
+        //日职业:"广岛三箭,仙台维加泰,浦和红钻,磐田山叶,名古屋八鲸,柏雷素尔,鸟栖沙岩,清水心跳,FC东京,横滨水手,鹿岛鹿角,川崎前锋,神户胜利船,大阪樱花,大宫松鼠,大阪飞脚,新泻天鹅,札幌康萨多尔,其他",
+        //日乙:"甲府风林,湘南比马,大分三神,京都不死鸟,千叶市原,东京绿荫,山形山神,横滨飞翼,枥木SC,北九州向日葵,FC冈山,水户蜀葵,松本山雅,德岛漩涡,草津温泉,熊本深红,福冈黄蜂,FC爱媛,FC岐阜,富山胜利,鸟取SC,町田泽维亚,其他",
+        //韩职:"首尔FC,全北现代,蔚山现代,水原蓝翼,浦项制铁,釜山偶像,济州联队,庆南FC,仁川联队,大邱FC,城南一和,大田市民,全南天龙,光州市民,光州尚武,江原FC,其他",
+        
+        中超:"广州恒大,江苏舜天,广州富力,贵州人和,北京国安,天津泰达,大连阿尔滨,长春亚泰,上海申花,上海上港,杭州绿城,山东鲁能,辽宁宏运,上海申鑫,青岛中能,武汉卓尔,其他",
+        日职业:"广岛三箭,仙台维加泰,浦和红钻,磐田山叶,名古屋八鲸,柏雷素尔,鸟栖沙岩,清水心跳,FC东京,横滨水手,鹿岛鹿角,川崎前锋,大阪樱花,大宫松鼠,新泻天鹅,甲府风林,湘南比马,大分三神,其他",
+        日乙:"神户胜利船,大阪飞脚,札幌康萨多尔,京都不死鸟,千叶市原,东京绿荫,山形山神,横滨飞翼,枥木SC,北九州向日葵,FC冈山,水户蜀葵,松本山雅,德岛漩涡,草津温泉,熊本深红,福冈黄蜂,FC爱媛,FC岐阜,富山胜利,鸟取SC,长崎成功丸,其他",
+        韩职:"首尔FC,全北现代,蔚山现代,水原蓝翼,浦项制铁,釜山偶像,济州联队,庆南FC,仁川联队,大邱FC,城南一和,大田市民,全南天龙,江原FC,其他",
+       
+        日本天皇杯:"其他",
+        亚洲杯:"其他",
+        亚冠:"其他",
+        英超:"切尔西,曼联,阿森纳,曼城,斯旺西,西布朗,埃弗顿,西汉姆联,富勒姆,热刺,纽卡斯尔,斯托克城,维拉,维冈竞技,桑德兰,诺维奇,利物浦,女王公园,雷丁,南安普顿,其他",
+        英冠:"布莱克本,布莱克浦,布莱顿,赫尔城,卡迪夫城,诺丁汉森林,布里斯托城,米德尔斯堡,德比郡,哈德斯菲尔德,伯明翰,狼队,利兹联,谢周三,博尔顿,水晶宫,巴恩斯利,伯恩利,莱切斯特城,沃特福德,米尔沃尔,查尔顿,伊普斯维奇,彼得堡联,其他",
+        英甲:"其他",
+        英联赛杯:"其他",
+        英社区盾杯:"其他",
+        德甲:"拜仁,法兰克福,汉诺威96,沙尔克04,多特蒙德,纽伦堡,杜塞尔,弗赖堡,门兴,沃尔夫斯堡,不莱梅,勒沃库森,菲尔特,美因茨05,奥格斯堡,斯图加特,汉堡,霍芬海姆,其他",
+        意甲:"尤文图斯,那不勒斯,拉齐奥,桑普多利亚,国际米兰,佛罗伦萨,罗马,卡坦尼亚,AC米兰,帕尔马,切沃,都灵,热那亚,博洛尼亚,亚特兰大,卡利亚里,乌迪内斯,巴勒莫,佩斯卡拉,锡耶纳,其他",
+        西甲:"巴塞罗那,马拉加,马洛卡,塞维利亚,马竞,巴列卡诺,贝蒂斯,拉科鲁尼亚,皇家社会,瓦拉多利德,巴伦西亚,赫塔菲,莱万特,毕尔巴鄂,皇马,塞尔塔,萨拉戈萨,格兰纳达,西班牙人,奥萨苏纳,其他",
+        法甲:"马赛,里昂,洛里昂,巴黎圣日尔曼,波尔多,瓦朗谢纳,图卢兹,兰斯,圣埃蒂安,尼斯,里尔,巴斯蒂亚,布雷斯特,阿雅克肖,伊维恩,蒙彼利埃,南锡,雷恩,索肖,特鲁瓦,其他",
+        世界杯:"其他",
+        欧洲杯:"其他",
+        欧冠:"其他",
+        欧洲联赛:"其他",
+        荷甲:"特温特,阿贾克斯,费耶诺德,埃因霍温,乌德勒支,其他",
+        法乙:"其他",
+        荷乙:"其他",
+        瑞典超:"马尔默,赫尔辛堡,哥德堡,埃尔夫斯堡,其他",
+        挪威甲:"罗森博格,其他",
+        美职联:"肯萨斯体育会,芝加哥火焰,纽约红牛,休斯顿迪纳摩,华盛顿联队,哥伦布机员,蒙特利尔冲击,新英格兰革命,费城联合,多伦多FC,其他",
+        美公开赛:"其他",
+        德乙:"不伦瑞克,科特布斯,FSV法兰克福,凯泽斯劳滕,柏林赫塔,慕尼黑1860,因戈尔施塔特,帕德博恩,波鸿,桑德豪森,圣保利,VfR亚伦,德累斯顿,奥厄,雷根斯堡,科隆,柏林联盟,杜伊斯堡,其他",
+        葡超:"本菲卡,波尔图,其他",
+        苏格兰超:"凯尔特人,其他",
+        巴甲:"其他",
+        阿甲:"其他",
+        其他:"其他"
+    };
+
+    $.each(arrData, function (pF) { //遍历数据增加厂商项
+        $("#league").append("<option>" + pF + "</option>");
+        $.each(arrData, function (pF, pS) {
+            if ($("#league option:selected").text() == pF) { //如果厂商选中项与数据匹配
+                objInit("#team");
+
+                $.each(pS.split(","), function () { //遍历数据增加品牌项
+                    $("#team").append("<option>" + this + "</option>");
+                });
+
+            }
+        });
+    });
+
+    $("#league").change(function () { //厂商列表框选项改变事件
+
+        objInit("#team");
+
+        $.each(arrData, function (pF, pS) {
+            if ($("#league option:selected").text() == pF) { //如果厂商选中项与数据匹配
+
+                $.each(pS.split(","), function () { //遍历数据增加品牌项
+                    $("#team").append("<option>" + this + "</option>");
+                });
+
+            }
+        });
+    });
+
+    $("#prediction").click(function () {
+        // this.setAttribute("checked",)
+        if (this.checked) {
+            $(".lidisable").show(500);//.css("display","block")
+        } else {
+            $(".lidisable").hide(500);
+        }
+
+    })
+
+    $("#review").click(function () {
+
+        if (this.checked) {
+            $(".lidisable_review").show(500);//.css("display","block")
+        } else {
+            $(".lidisable_review").hide(500);
+        }
+    })
+
+    /* var strSel = "init";
+     $("#news1").change(function () { //设置下拉列表框change事件
+     strSel = this.val(); //获取下拉列表框所选中全部选项值
+     alert(strSel);
+     })*/
+    $("#btnSubmit_cancle").click(function () {
+        window.location.href = "newsview.html";
+    });
+     
+
+     $("#btnfileupload").click(function () {
+    	 ajaxFileUpload();
+     });
+     
+    if (newsneed == true) {
+		
+        var count;
+        if(weiboedit == false){
+	        $("#title").val(parent.oTxtValue_title);
+	        $("#keyword").val(parent.oTxtValue_key); //关键字
+	        $("#content").val(parent.oTxtValue_cont); //内容
+	        $("#comment").val(parent.oTxtValue_comm); //备注
+	        $("#from").val(parent.oTxtValue_from); //新闻来源
+	
+	        if (parent.oChkValue_pre == false) {
+	            $("#predictionc").val(""); //预测内容
+	            $("#factor").val("16"); //预测系数
+	        } else {
+	            $("#prediction").attr('checked', 'checked');
+	            $(".lidisable").show(500);//.css("display","block")
+	            $("#predictionc").val(parent.oTxtValue_pred); //预测内容
+	            $("#factor").val(parent.oTxtValue_factor); //预测系数
+	        }
+	
+	        if (parent.oChkValue_review == false) {
+	            $("#reviewc").val(""); //复盘重点
+	        } else {
+	            $("#review").attr('checked', 'checked');
+	            $(".lidisable_review").show(500);//.css("display","block")
+	            $("#reviewc").val(parent.oTxtValue_reviwc); //复盘重点
+	        }
+	
+	
+	        //parent.oRadioRack = "1";//新闻星级
+	        if (parent.oRadioRack == "1") {
+	            $('input:radio[value="1"]').attr('checked', 'checked');
+	        } else if (parent.oRadioRack == "2") {
+	            $('input:radio[value="2"]').attr('checked', 'checked');
+	        } else if (parent.oRadioRack == "3") {
+	            $('input:radio[value="3"]').attr('checked', 'checked');
+	        } else if (parent.oRadioRack == "4") {
+	            $('input:radio[value="4"]').attr('checked', 'checked');
+	        } else if (parent.oRadioRack == "5") {
+	            $('input:radio[value="5"]').attr('checked', 'checked');
+	        } else {
+	            parent.oRadioRack == "1"
+	            $('input:radio[value="1"]').attr('checked', 'checked');
+	        }
+	
+	
+	        $("#news1").val(parent.newstype);//新闻类型
+	
+	        count = $("#league option").length;// 联赛
+	        for (var i = 0; i < count; i++) {
+	            if ($("#league").get(0).options[i].text == parent.oLeague) {
+	                $("#league").get(0).options[i].selected = true;
+	                break;
+	            }
+	        }
+	
+	        /*start   根据第一个选项进行初始化联动耳机选项的更新，因为select不触发onchange*/
+	        objInit("#team");
+	
+	        $.each(arrData, function (pF, pS) {
+	            if ($("#league option:selected").text() == pF) { //如果厂商选中项与数据匹配
+	
+	                $.each(pS.split(","), function () { //遍历数据增加品牌项
+	                    $("#team").append("<option>" + this + "</option>");
+	                });
+	
+	            }
+	        });
+	        /*end*/
+	
+	        count = $("#team option").length;// 队伍
+	        for (var i = 0; i < count; i++) {
+	            if ($("#team").get(0).options[i].text == parent.oTeam) {
+	                $("#team").get(0).options[i].selected = true;
+	                break;
+	            }
+	        }
+	
+	        $("#datepicker").val(parent.oTxtDate);//时间
+	        
+	        if(typeof parent.oTxtValue_picid == "undefined"||parent.oTxtValue_picid == null||parent.oTxtValue_picid == ""||parent.oTxtValue_picid == "undefined"){
+	            $("#t_image")[0].style.display = 'none'; 
+	        }else{
+	        	var myDate = new Date();
+				$("#t_image").attr("src","/Jscorer/getPic?fileId="+parent.oTxtValue_picid);
+	            $("#t_image")[0].style.display = ''; 
+	        }
+        }else{
+
+        	//parent.oTxtDate = $.datepicker.formatDate( "yymmdd", new Date()); 
+            //$("#datepicker").val(parent.oTxtDate);//时间
+            
+	        $("#title").val(parent.oTxtValue_title);
+	        $("#content").val(parent.oTxtValue_cont); //内容
+
+	        $("#datepicker").val(parent.oTxtDate);//时间
+
+	        if(typeof parent.oTxtValue_picid == "undefined"||parent.oTxtValue_picid == null||parent.oTxtValue_picid == ""||parent.oTxtValue_picid == "undefined"){
+	            $("#t_image")[0].style.display = 'none'; 
+	        }else{
+	        	var myDate = new Date();
+				$("#t_image").attr("src","/Jscorer/getPic?fileId="+parent.oTxtValue_picid);
+	            $("#t_image")[0].style.display = ''; 
+	        }
+        }
+
+    }else{
+    	parent.oTxtValue_picid = "";
+
+    	parent.oTxtDate = $.datepicker.formatDate( "yymmdd", new Date()); 
+        $("#datepicker").val(parent.oTxtDate);//时间
+    }
+
+
+    $("#btnSubmit").click(function () {
+        parent.oTxtValue_title = $("#title").val(); //标题
+        parent.oTxtValue_key = $("#keyword").val(); //关键字
+        parent.oTxtValue_cont = $("#content").val(); //内容
+        parent.oTxtValue_comm = $("#comment").val(); //备注
+        parent.oTxtValue_from = $("#from").val(); //新闻来源
+
+        parent.oTxtValue_pred = $("#predictionc").val(); //预测内容
+        parent.oTxtValue_factor = $("#factor").val(); //预测系数
+        parent.oTxtValue_reviwc = $("#reviewc").val(); //复盘重点
+
+        parent.oChkValue_pre = $("#prediction").is(":checked") ? true : false;//"预测" : "未预测"; //获取单选框按钮值
+        parent.oChkValue_review = $("#review").is(":checked") ? true : false;//"复盘" : "无须复盘";//获取复选框按钮值
+
+        parent.oRadioRack = "1";//新闻星级
+        parent.newstype = $("#news1").val();//新闻类型
+        parent.oLeague = $("#league option:selected").text();//联赛
+        parent.oTeam = $("#team option:selected").text();//队伍
+
+        parent.oTxtDate = $("#datepicker").val();//时间
+
+        if ($("#prediction").is(":checked")) {
+            if (parent.oTxtValue_factor == "") {
+                parent.oTxtValue_factor = "16";
+            }
+        } else {
+            parent.oTxtValue_pred = "";
+            parent.oTxtValue_factor = "16";
+            //alert("您好,欢迎来到pppp");
+        }
+
+        if ($("#review").is(":checked")) {
+        } else {
+            parent.oTxtValue_reviwc = "";
+            //alert("您好,欢迎来到rrrr");
+        }
+
+        $("div div ul li input[type=radio]").each(function (index) {
+            //根据形参index设置元素的title属性
+            if (this.checked)
+                parent.oRadioRack = this.value;
+
+            // alert("target");
+        })
+
+        $("#divTip").css("display", "block").html("标题:" + parent.oTxtValue_title
+                + "<br>" + "关键字:" + parent.oTxtValue_key
+                + "<br>"
+                + "<br>" + "联赛:" + parent.oLeague
+                + "<br>" + "球队:" + parent.oTeam
+                + "<br>" + "时间:" + parent.oTxtDate
+                + "<br>" + "picid:" + parent.oTxtValue_picid
+                + "<br>"
+                + "<br>" + "内容:" + parent.oTxtValue_cont
+                + "<br>" + "备注:" + parent.oTxtValue_comm
+                + "<br>" + "新闻来源:" + parent.oTxtValue_from
+                + "<br>" + "新闻类型:" + parent.newstype
+                + "<br>"
+                + "<br>" + "预测内容:" + parent.oTxtValue_pred
+                + "<br>" + "预测系数:" + parent.oTxtValue_factor
+                + "<br>" + "复盘重点:" + parent.oTxtValue_reviwc
+                + "<br>" + "新闻星级:" + parent.oRadioRack
+                + "<br>" + parent.oChkValue_pre
+                + "<br>" + parent.oChkValue_review); //显示提示文本元素
+
+        //var newsId = "";
+                
+        if(parent.oTxtDate == ""){
+        	alert("请输入时间.");
+        	return;
+        }
+
+        if (newsneed == true && weiboedit == false) {//修改
+
+            $.ajax({ //请求登录处理页
+                url:"/Jscorer/add_newinfo", //登录处理页
+                dataType:"json",
+                //传送请求数据
+
+                data:{newsId:parent.newsId, league:parent.oLeague, teamName:parent.oTeam,
+                    type:parent.newstype, title:parent.oTxtValue_title,
+                    keyword:parent.oTxtValue_key, content:parent.oTxtValue_cont,
+                    comment:parent.oTxtValue_comm, from:parent.oTxtValue_from,
+                    prediction:parent.oTxtValue_pred, reviewInfo:parent.oTxtValue_reviwc,
+                    factor:parent.oTxtValue_factor, rank:parent.oRadioRack,
+                    isWPrediction:parent.oChkValue_pre, isReview:parent.oChkValue_review,
+                    date:parent.oTxtDate,pic:parent.oTxtValue_picid
+                },
+                //newsId:newsId,
+                success:function (strValue) { //登录成功后返回的数据
+                    //根据返回值进行状态显示
+                    //alert(strValue);
+                    if (strValue.successful == "true") {
+                        alert("添加成功！");
+                    }
+                    else {
+                        alert("添加失败！");
+                    }
+
+                    window.location.href = "newsview.html";//content
+                },
+
+                error:function () {
+
+                    alert("请检查是否有参数错误！");
+                }
+            })
+        }else {//添加的时候，从微博来的编辑信息就可以当作是新增消息
+
+            $.ajax({ //请求登录处理页
+                url:"/Jscorer/add_newinfo", //登录处理页
+                dataType:"json",
+                //传送请求数据
+
+                data:{league:parent.oLeague, teamName:parent.oTeam,
+                    type:parent.newstype, title:parent.oTxtValue_title,
+                    keyword:parent.oTxtValue_key, content:parent.oTxtValue_cont,
+                    comment:parent.oTxtValue_comm, from:parent.oTxtValue_from,
+                    prediction:parent.oTxtValue_pred, reviewInfo:parent.oTxtValue_reviwc,
+                    factor:parent.oTxtValue_factor, rank:parent.oRadioRack,
+                    isWPrediction:parent.oChkValue_pre, isReview:parent.oChkValue_review,
+                    date:parent.oTxtDate,pic:parent.oTxtValue_picid
+                },
+                //newsId:newsId,
+                success:function (strValue) { //登录成功后返回的数据
+                    //根据返回值进行状态显示
+                    //alert(strValue);
+                    if (strValue.successful == "true") {
+                        alert("添加成功！");
+                        if(weiboedit == true){
+                        	delitem(parent.newsId);//发出删除命令
+                        }
+                    }
+                    else {
+                        alert("添加失败！");
+                        window.location.href = "newsview.html";//content
+                    }
+
+                },
+
+                error:function () {
+
+                    alert("请检查是否有参数错误！");
+                }
+            })
+        }
+    })
+})
+
+function delitem(newsid) {
+	//alert(newsid);
+    $.ajax({ //请求登录处理页
+        url:"/Jscorer/delete_weiboinfo", //登录处理页
+        dataType:"json",
+        //传送请求数据
+        data:{ newsid:newsid},
+        success:function (strValue) { //登录成功后返回的数据
+
+            //window.location.href = "newsview.html";
+
+            window.location.href = "newsview.html";//content
+        }
+    })
+
+}
+
+    function ajaxFileUpload()
+    {
+        //starting setting some animation when the ajax starts and completes
+        $("#loading")
+        .ajaxStart(function(){
+            $(this).show();
+        })
+        .ajaxComplete(function(){
+            $(this).hide();
+        });
+        
+        /*
+            prepareing ajax file upload
+            url: the url of script file handling the uploaded files
+                        fileElementId: the file type of input element id and it will be the index of  $_FILES Array()
+            dataType: it support json, xml
+            secureuri:use secure protocol
+            success: call back function when the ajax complete
+            error: callback function when the ajax failed
+            
+                */
+        $.ajaxFileUpload
+        (
+            {
+                url:'/Jscorer/updatepic', 
+                secureuri:false,
+                fileElementId:'fileToUpload',
+                dataType: 'json',
+                success: function (data, status)
+                {
+
+	                //alert(data.successful);
+	                //alert(data.title);
+	                //alert(status);
+	
+                    if(typeof(data.successful) != 'undefined')
+                    {
+                        if(data.successful == "true")
+                        {
+						    //alert("upload ok!"); 
+						    parent.oTxtValue_picid = data.title;//picid by jhy
+							//document.getElementById('t_image').src="/ELifeManagerServer/elifemanager/getPic?fileId="+myObject.title;
+							//document.getElementById('t_image').style["display"]="";
+							
+							$("#t_image").attr("src","/Jscorer/getPic?fileId="+data.title);
+							$("#t_image")[0].style.display = ''; 
+                        }else
+                        {
+    						alert("上传失败  err："+ data.title+"!"); 
+                        }
+                    }
+                },
+                error: function (data, status, e)
+                {
+                    alert(e);
+                }
+            }
+        )
+        
+        return false;
+
+    } 
+</script>
+</head>
+<body>
+<!--div id="head">
+    Sam的宅基地，欢迎光临！
+</div-->
+
+<div id="news">
+    <div id="newformdiv">
+        <ul class="news">
+            <li>
+                <label class="lw"> 标题: </label>
+                <input id="title" type="text" value="" class="txt"/>
+            </li>
+            <li>
+                <label class="lw"> 联赛球队: </label>
+                <select class="selectlw" id="league">
+                </select>
+                <select class="selectlw" id="team" style="margin-left: 20px">
+                </select>
+            </li>
+            <li>
+                <label class="lw"> 时间: </label>
+                <input type="text" id="datepicker">
+            <li>
+                <label class="lw"> 关键字: </label>
+                <input id="keyword" type="text" value="" class="txt"/>
+            </li>
+            <li>
+                <label class="lw"> 内容: </label>
+                <textarea id="content" class="txtA"></textarea>
+            </li>
+            <li>
+                <label class="lw"> 备注: </label>
+                <input id="comment" type="text" value="" class="txt"/>
+            </li>
+            <li>
+                <label class="lw"> 新闻类型: </label>
+                <select class="selectlw" id="news1">
+                    <option value="资讯">资讯</option>
+                    <option value="八卦">八卦</option>
+                    <option value="伤停">伤停</option>
+                    <option value="转会">转会</option>
+                    <option value="比赛预测">比赛预测</option>
+                    <option value="其他">其他</option>
+                </select>
+            </li>
+            <li>
+                <label class="lw"> 星级: </label>
+                <input type="radio" name="rank" id="rank1" value="1"/><span id="Span1"> 1</span>
+                <input type="radio" name="rank" id="rank2" value="2"/><span id="Span2"> 2</span>
+                <input type="radio" name="rank" id="rank3" value="2"/><span id="Span3"> 3</span>
+                <input type="radio" name="rank" id="rank4" value="4"/><span id="Span4"> 4</span>
+                <input type="radio" name="rank" id="rank5" value="5"/><span id="Span5"> 5</span>
+
+            </li>
+            <li>
+                <label class="lw"> 新闻来源: </label>
+                <input id="from" type="text" value="" class="txt"/>
+            </li>
+
+            <li>
+                <label class="lw"> 文件上传： </label>
+                <input id="fileToUpload" type="file" size="45" name="fileToUpload" class="input">
+            </li>
+            
+            <li>
+                <label class="lw"> 确保选择文件后上传: </label>
+                <button class="button" id="buttonUpload" onclick="return ajaxFileUpload();">Upload</button>
+            </li>
+            
+            
+            <li>
+                <label class="lw"> </label>
+  				<!--img style="display:none;" width="250"  height="250" id="t_image"/-->
+  				<img style="display:none;" width="250" id="t_image"/>
+            </li>
+            
+            <li>
+                <input type="checkbox" id="prediction" style="margin: 0 0 0 180px"/><span style="color: red;font-weight: bold;"> 比赛预测</span>
+            </li>
+            <li class="lidisable">
+                <label class="lw"> 预测内容: </label>
+                <input id="predictionc" type="text" value="" class="txtno"/>
+            </li>
+            <li class="lidisable">
+                <label class="lw"> 预测系数: </label>
+                <input id="factor" type="text" value="" class="txtno"/>
+            </li>
+
+            <li>
+                <input type="checkbox" id="review" style="margin: 0 0 0 180px"/><span style="color: red;font-weight: bold;"> 复盘</span>
+            </li>
+            <li class="lidisable_review">
+                <label class="lw"> 复盘重点: </label>
+                <input id="reviewc" type="text" value="" class="txtno"/>
+            </li>
+
+            <li>
+                <input id="btnSubmit" type="submit" value="提交" class="btn11" style="margin: 0 0px 0px 200px; border:0px;" onmouseover="this.style.backgroundPosition='left -40px'" onmouseout="this.style.backgroundPosition='left top'"/>
+                <input id="btnSubmit_cancle" type="submit" value="取消" class="btn11" style="border:0px;" onmouseover="this.style.backgroundPosition='left -40px'" onmouseout="this.style.backgroundPosition='left top'"/>
+            </li>
+        </ul>
+    </div>
+
+
+    <div id="divTip" class="divTip"></div>
+
+
+</div>
+</body>
+</html>
