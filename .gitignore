@@ -2,7 +2,6 @@
 .svn
 build
 gen
-bin/*
 *.bak
 *.tmp
 .settings/
