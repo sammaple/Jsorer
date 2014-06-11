@@ -4,4 +4,4 @@ build
 gen
 *.bak
 *.tmp
-.settings/
+#.settings/
