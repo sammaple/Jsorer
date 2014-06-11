@@ -29,6 +29,7 @@ import soccer.access.interfaces.IFileDao;
 import soccer.access.interfaces.IGeneralInfoDao;
 import soccer.access.interfaces.IWeiboDao;
 import soccer.access.util.Base64;
+import soccer.access.util.Email;
 import soccer.access.web.ctl.PicManagerControl;
 import weibo4j.Favorite;
 import weibo4j.examples.oauth2.Log;
@@ -609,7 +610,19 @@ public class PushMessageSender extends Thread {
                     weiboInfo.setGetAccessTokenOk(false);
                     weiboInfo.setLastErrorReason(out.toString());
                     
+                    if(out.toString().contains("connect timed")){
+                    	weiboInfo.setGetAccessTokenOk(true);
+                        Email.sendMail("juling.jhy@alibaba-inc.com", "超时重新获取");
+                        weiboDao.save(weiboInfo);
+                        continue;
+                    }else{
+
+                        Email.sendMail("juling.jhy@alibaba-inc.com", out.toString());
+                    }
+
+                    weiboInfo.setRunningOk(false);//更新状态
                     weiboDao.save(weiboInfo);
+                    
                     break;
                 }
                 Log.logInfo("-----------------------------round end--------------");

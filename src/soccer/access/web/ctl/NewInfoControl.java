@@ -373,13 +373,16 @@ public class NewInfoControl {
         boolean running = PushMessageSender.isThreadRunning();
         StringBuffer content = new StringBuffer("微博状态:");
 
+        WeiboInfo weibo = weiboDao.find();
+        weibo.setRunningOk(running);//更新状态
+        weiboDao.save(weibo);
+        
         if (running) {
             content.append("微博线程运行【正常】;");
         } else {
             content.append("微博线程运行【异常】;");
         }
 
-        WeiboInfo weibo = weiboDao.find();
         if (weibo != null) {
             content.append(weibo.toString());
         }
