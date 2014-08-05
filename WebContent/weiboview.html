@@ -100,6 +100,9 @@
 
 <script language="javascript">
 
+var picwidth_org = 220;
+var picwidth_zoom = 300;
+
 function initnewsinfo() {
     parent.oTxtValue_title = ""; //标题
     parent.oTxtValue_key = ""; //关键字
@@ -175,7 +178,7 @@ function insertpage(json, type) {
                     + "<br>" + "新闻来源:" + "<a class=\"from\">" + "新浪微博" + "</a>"
                     + "<br>" + "<a id=\"idid\" class=\"newsid\">" + $strid + "</a>"
                     + "<br>" + "<a  class=\"pic\" style=\"display:none\">" + n.pic + "</a>"
-                    + "<br>" + "<img id=\""+$strid+"_img"+"\"weight=\"250\" class=\"image\" >" + "</img>"
+                    + "<br>" + "<img id=\""+$strid+"_img"+"\"width=\""+picwidth_org+"\" class=\"image\" >" + "</img>"
                     + "</li>"
             ); //显示提示文本元素
             
@@ -250,6 +253,35 @@ function insertpage(json, type) {
         $("div li a#"+$strid).click(modify);
         var clickDelId = "#"+$strid+"_del";
         $(clickDelId).click(deleteinfo);
+        
+
+        var picId = "#"+$strid+"_img";//zomm in out the pic
+        $(picId).click(changpic_view);
+        
+        function changpic_view(){
+        	//alert("pic on click!"+$(this)[0].width);
+        	
+        	if($(this)[0].width == picwidth_org){
+        		$(this)[0].width = picwidth_zoom;
+        	}else{
+        		$(this)[0].width = picwidth_org;
+        	}
+                /*parent.delid = $($(this).parent().get(0)).find("a.newsid").text();
+                parent.oHtmldiv = $(this).parent().get(0);
+                $.prompt('是否删除该条信息!', {
+                    buttons:[
+                        {title:'确认删除', value:true},
+                        {title:'撤销删除', value:false}
+                    ],
+                    submit:function (e, v, m, f) {
+                        //alert(v);
+                        if (v == true) {
+
+                            delitem(parent.delid);
+                        }
+                    }
+                });*/
+        }
 
     });
 }
