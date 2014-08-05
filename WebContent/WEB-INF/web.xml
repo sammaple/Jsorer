@@ -100,6 +100,10 @@
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>JscorerServlet</servlet-name>
+    <url-pattern>/web_testmail</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>JscorerServlet</servlet-name>
     <url-pattern>/web_setWeiboCode</url-pattern>
   </servlet-mapping>
   <servlet-mapping>

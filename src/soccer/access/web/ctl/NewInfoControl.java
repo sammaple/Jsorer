@@ -36,6 +36,7 @@ import soccer.access.interfaces.IFileDao;
 import soccer.access.interfaces.IWeiboDao;
 import soccer.access.server.NewsInfoServer;
 import soccer.access.server.WeiboInfoServer;
+import soccer.access.util.Email;
 import soccer.access.util.JsonUtil;
 import soccer.weibo.PushMessageSender;
 import weibo4j.Oauth;
@@ -397,6 +398,22 @@ public class NewInfoControl {
 
     }
 
+    
+    @RequestMapping("/web_testmail")
+    @ResponseBody
+    public String testmail()
+            throws UnsupportedEncodingException {
+
+
+        Email.sendMail("juling.jhy@alibaba-inc.com", "测试邮件成功！");
+
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("Send Mail OK!");
+        
+        return new String(buffer.toString().getBytes("UTF-8"), "ISO-8859-1");
+
+    }
+    
     @RequestMapping("/web_setWeiboCode")
     @ResponseBody
     public String setWeiboCode(String code)

@@ -68,6 +68,32 @@ function setWeiboCode(){
     }
 }
 
+function mailtest(){
+
+	var url = "/Jscorer/web_testmail";
+	{
+    	 request.open("POST", encodeURI(url), true);
+         request.onreadystatechange = mailtestResponese;
+         request.send(null);
+    }
+}
+
+function mailtestResponese(){
+    if (request.readyState == 4) {
+        if (request.status == 200) {
+			try{
+            	//var myObject = JSON.parse(request.responseText);
+            	alert(request.responseText);
+            	  
+    		}catch(err){
+    			alert(err);
+    		}
+        } else
+          alert("测试邮件失败!");
+      }
+}
+
+
 function setWeiboCodeResponese(){
     if (request.readyState == 4) {
         if (request.status == 200) {
@@ -158,6 +184,7 @@ window.onload = getCurrentSystemWeiboStatus();
 
 <input type="text" id="setWeiboCode"/>
 <input type="button" id="search" onclick="setWeiboCode()" value="设置weibo code" />
+<input type="button" id="mailtest" onclick="mailtest()" value="测试email" />
 
 <br/>
 <br/>

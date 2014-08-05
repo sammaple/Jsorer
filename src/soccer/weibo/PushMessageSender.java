@@ -614,16 +614,23 @@ public class PushMessageSender extends Thread {
                     	weiboInfo.setGetAccessTokenOk(true);
                         Email.sendMail("juling.jhy@alibaba-inc.com", "超时重新获取");
                         weiboDao.save(weiboInfo);
+                        Log.logInfo("-----------------WeiboException------------exception1--------------");
                         continue;
                     }else{
 
                         Email.sendMail("juling.jhy@alibaba-inc.com", out.toString());
+                        Log.logInfo("-----------------WeiboException------------exception2--------------");
                     }
 
                     weiboInfo.setRunningOk(false);//更新状态
                     weiboDao.save(weiboInfo);
-                    
-                    break;
+
+                    continue;//avoid break out this thread!
+                    // break;
+                }
+                catch(Exception e){
+
+                    Log.logInfo("-----------------WeiboException------------jhyerror--------------");
                 }
                 Log.logInfo("-----------------------------round end--------------");
             }
