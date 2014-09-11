@@ -320,13 +320,13 @@ public class PushMessageSender extends Thread {
             WeiboInfo weiboInfo = weiboDao.find();
             if (weiboInfo == null) {
 
-                logger.debug("Hello,PushMessageSender weiboInfo is null~~");
+                logger.error("Hello,PushMessageSender weiboInfo is null~~");
                 continue;
             }
 
             if (!weiboInfo.isGetAccessTokenOk()) {
 
-                logger.debug("Hello,PushMessageSender isGetAccessTokenOk is false~~");
+                logger.error("Hello,PushMessageSender isGetAccessTokenOk is false~~");
                 // weiboInfo.setGetAccessTokenOk(true);
                 // weiboDao.save(weiboInfo);
                 continue;
@@ -335,7 +335,7 @@ public class PushMessageSender extends Thread {
             String access_token = weiboInfo.getAccess_token();
             if (access_token == null || access_token.isEmpty()) {
 
-                logger.debug("Hello,PushMessageSender access_token is null~~");
+                logger.error("Hello,PushMessageSender access_token is null~~");
                 continue;
             }
 
